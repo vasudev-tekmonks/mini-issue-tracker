@@ -2,8 +2,8 @@
  * (C) 2015 TekMonks. All rights reserved.
  * License: See enclosed LICENSE file.
  */
-const FRONTEND = "https://{{{hostname}}}";
-const BACKEND = "https://{{{hostname}}}:9090";
+const FRONTEND = "http://{{{hostname}}}:8000";
+const BACKEND = "http://{{{hostname}}}:9000";
 const APP_NAME = $$.getRootAppName();
 const APP_PATH = `${FRONTEND}/apps/${APP_NAME}`;
 
