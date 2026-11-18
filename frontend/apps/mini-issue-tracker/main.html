@@ -62,7 +62,7 @@ License: See enclosed LICENSE file.
                     <div class="stat-icon">I</div>
                     <div>
                         <span class="stat-label">Total Issues</span>
-                        <strong class="stat-value">0</strong>
+                        <strong id="issue-count" class="stat-value">0</strong>
                     </div>
                 </div>
 
@@ -70,7 +70,19 @@ License: See enclosed LICENSE file.
                     <div class="stat-icon">O</div>
                     <div>
                         <span class="stat-label">Open</span>
-                        <strong class="stat-value">0</strong>
+                        <strong id="open-issue-count" class="stat-value"
+                            >0</strong
+                        >
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">P</div>
+                    <div>
+                        <span class="stat-label">In Progress</span>
+                        <strong id="in-progress-issue-count" class="stat-value"
+                            >0</strong
+                        >
                     </div>
                 </div>
 
@@ -78,7 +90,9 @@ License: See enclosed LICENSE file.
                     <div class="stat-icon">C</div>
                     <div>
                         <span class="stat-label">Closed</span>
-                        <strong class="stat-value">0</strong>
+                        <strong id="closed-issue-count" class="stat-value"
+                            >0</strong
+                        >
                     </div>
                 </div>
             </section>
@@ -151,15 +165,91 @@ License: See enclosed LICENSE file.
                 <div class="panel">
                     <div class="panel-header">
                         <div>
-                            <h2>My Issues</h2>
-                            <p>Issues assigned to you.</p>
+                            <h2>Issues</h2>
+                            <p>Track and manage project issues.</p>
                         </div>
-                    </div>
 
-                    <div class="empty-state">
-                        <div class="empty-icon">I</div>
-                        <h3>No issues yet</h3>
-                        <p>Issues assigned to you will appear here.</p>
+                        <button
+                            class="primary-button"
+                            onclick="main.openIssueForm()"
+                        >
+                            + New Issue
+                        </button>
+                    </div>
+                    <form
+                        id="issue-form"
+                        class="project-form"
+                        hidden
+                        onsubmit="
+                            event.preventDefault();
+                            main.createIssue();
+                        "
+                    >
+                        <div class="form-fields">
+                            <h3 id="issue-form-title" class="issue-form-title">Create Issue</h3>
+                            <select id="issue-project" required>
+                                <option value="">Select project</option>
+                            </select>
+
+                            <input
+                                id="issue-title"
+                                type="text"
+                                placeholder="Issue title"
+                                maxlength="150"
+                                required
+                            />
+
+                            <textarea
+                                id="issue-description"
+                                placeholder="Description (optional)"
+                                maxlength="1000"
+                            ></textarea>
+
+                            <input
+                                id="issue-assignee"
+                                type="text"
+                                placeholder="Assignee (optional)"
+                            />
+
+                            <select id="issue-priority">
+                                <option value="Low">Low</option>
+                                <option value="Medium" selected>Medium</option>
+                                <option value="High">High</option>
+                                <option value="Critical">Critical</option>
+                            </select>
+
+                            <select id="issue-status">
+                                <option value="Open">Open</option>
+                                <option value="In Progress">In Progress</option>
+                                <option value="Closed">Closed</option>
+                            </select>
+                        </div>
+
+                        <div class="form-actions">
+                            <button
+                                type="button"
+                                class="secondary-button"
+                                onclick="main.closeIssueForm()"
+                            >
+                                Cancel
+                            </button>
+
+                            <button
+                                id="issue-submit-button"
+                                type="submit"
+                                class="primary-button"
+                            >
+                                Create Issue
+                            </button>
+                        </div>
+                    </form>
+
+                    <div id="issues-list" class="issues-list">
+                        <div class="empty-state">
+                            <div class="empty-icon">I</div>
+                            <h3>Loading issues...</h3>
+                            <p>Fetching your issues.</p>
+                        </div>
                     </div>
                 </div>
             </section>

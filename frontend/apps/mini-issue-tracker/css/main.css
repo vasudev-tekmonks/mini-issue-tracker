@@ -97,7 +97,7 @@ body {
 
 .stats-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     gap: 20px;
     margin-bottom: 24px;
 }
@@ -245,7 +245,8 @@ body {
 }
 
 .form-fields input,
-.form-fields textarea {
+.form-fields textarea,
+.form-fields select {
     width: 100%;
     box-sizing: border-box;
     padding: 10px 12px;
@@ -262,9 +263,17 @@ body {
 }
 
 .form-fields input:focus,
-.form-fields textarea:focus {
+.form-fields textarea:focus,
+.form-fields select:focus {
     outline: none;
     border-color: #1644cd;
+}
+
+.issue-form-title {
+    margin: 0 0 6px;
+    font-size: 18px;
+    font-weight: 600;
+    color: #1f2937;
 }
 
 .form-actions {
@@ -308,4 +317,63 @@ body {
     margin: 0;
     color: #6b7280;
     font-size: 13px;
+}
+
+.issues-list {
+    min-height: 220px;
+}
+
+.issue-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 22px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.issue-item:last-child {
+    border-bottom: 0;
+}
+
+.issue-item h3 {
+    margin: 0 0 5px;
+    font-size: 16px;
+}
+
+.issue-item p {
+    margin: 0;
+    color: #6b7280;
+    font-size: 13px;
+}
+
+.issue-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: 20px;
+}
+
+.issue-meta span {
+    padding: 5px 9px;
+    border-radius: 5px;
+    background: #f3f4f6;
+    color: #374151;
+    font-size: 12px;
+    white-space: nowrap;
+}
+
+.issue-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.issue-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-left: 20px;
+}
+
+.issue-actions .secondary-button {
+    padding: 6px 12px;
 }
