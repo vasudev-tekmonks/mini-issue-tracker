@@ -1,141 +1,189 @@
-/* 
+/*
  * (C) 2015 TekMonks. All rights reserved.
  * License: See enclosed LICENSE file.
  */
 
 body {
-	background: #ffffff url(/framework/img/logo_512.png)
-	0% 0% fixed no-repeat;
+    margin: 0;
+    min-height: 100vh;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #f5f7fb;
+    color: #1f2937;
+
+    font-family: Arial, Helvetica, sans-serif;
 }
 
-button {
-    background: #34aadc;
-	border: none;
-    color: white;
-    display: inline-block;
-    font-family: arial;
-    font-size: 16px;
-    padding: 4.8% 15px;
-    margin: 15px;
-	width: 80%;
-	height: 100%;
-}
- 
-button:disabled:hover{
-    background: #34aadc;
+
+/* Main container */
+
+.login-container {
+    width: 520px;
+    padding: 40px;
+
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+
+    box-sizing: border-box;
 }
 
-button:hover {   
-    background-color:#007aff;
+
+/* Heading */
+
+.login-container h1 {
+    margin: 0 0 35px;
+
+    text-align: center;
+
+    font-size: 28px;
+    font-weight: bold;
+    color: #1f2937;
 }
 
-button:active {
-    position:relative;
-    top:0px;
+
+/* Login / Register sections */
+
+.auth-section {
+    text-align: center;
 }
 
-.lgbox {
-	position: absolute;
-	top: 25%;
-	right: 15%;
-	color: #000000;
+.auth-section h2 {
+    margin: 0 0 18px;
+
+    font-size: 18px;
+    color: #374151;
 }
+
+.register-section {
+    margin-top: 35px;
+    padding-top: 30px;
+
+    border-top: 1px solid #e5e7eb;
+}
+
+
+/* Input row */
+
+.form-row {
+    display: flex;
+    gap: 12px;
+
+    margin-bottom: 16px;
+}
+
+
+/* Input boxes */
+
+.inputbox {
+    flex: 1;
+
+    width: 100%;
+    box-sizing: border-box;
+
+    padding: 10px 12px;
+
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+
+    outline: none;
+
+    background: #ffffff;
+    color: #1f2937;
+
+    font: 14px Arial, Helvetica, sans-serif;
+}
+
+.inputbox:focus {
+    border-color: #1644cd;
+}
+
+
+/* Buttons */
+
+.auth-section button {
+    min-width: 110px;
+
+    padding: 10px 18px;
+
+    border: 0;
+    border-radius: 6px;
+
+    background: #1644cd;
+    color: #ffffff;
+
+    font: bold 14px Arial, Helvetica, sans-serif;
+
+    cursor: pointer;
+}
+
+.auth-section button:hover {
+    background: #1644cd;
+}
+
+.auth-section button:active {
+    transform: translateY(1px);
+}
+
+
+/* Error messages */
+
+.signinerror,
+.registererrorid,
+.registererrorpass {
+    margin-top: 8px;
+
+    color: #dc2626;
+
+    font: 12px Arial, Helvetica, sans-serif;
+
+    visibility: hidden;
+}
+
+.register-errors {
+    min-height: 20px;
+}
+
+
+/* Language selector */
 
 .langbox {
-	position: absolute;
-	bottom: 5%;
-	right: 5%;
-	color: #000000;
+    position: fixed;
+
+    right: 25px;
+    bottom: 20px;
+
+    color: #6b7280;
 }
 
 .langsel {
-	font-family: arial;
-	cursor: pointer;
-	font-size: 11px;
+    font-size: 12px;
+    cursor: pointer;
 }
 
-.regbox {
-	position: absolute;
-	top: 55%;
-	right: 15%;
-	color: #000000;
+.langsel:hover {
+    color: #1644cd;
 }
 
-.login_button {
-	position: absolute;
-	left: 102%;
-	top: -14px;
-	white-space:nowrap;
-	width: 30%;
+
+/* Small screens */
+
+@media (max-width: 600px) {
+
+    .login-container {
+        width: calc(100% - 32px);
+        padding: 28px 22px;
+    }
+
+    .login-container h1 {
+        font-size: 24px;
+    }
+
+    .form-row {
+        flex-direction: column;
+    }
+
 }
-
-.register_button {
-	position: absolute;
-	left: 102%;
-	top: -14px;
-	white-space:nowrap;
-	width: 30%;
-}
-
-.signinerror {
-	position: relative;
-	padding: 3px;
-	margin-left: 6%;
-	font:12px arial;
-	color: red;
-	text-align: left;
-	visibility: hidden;
-}
-
-.registererrorid {
-	position: absolute;
-	padding: 3px;
-	margin-left: 6%;
-	font:12px arial;
-	color: red;
-	text-align: left;
-	top: 100%;
-	visibility: hidden;
-}
-
-.registererrorpass {
-	position: absolute;
-	padding: 3px;
-	margin-left: 57%;
-	font:12px arial;
-	color: red;
-	text-align: left;
-	top: 100%;
-	visibility: hidden;
-}
-
-.inputbox {
-	outline: none;
-    border: none;
-    font: 16px arial;
-    padding: 5px;
-    color: #000000;
-    margin-left: 25px;
-    border-bottom: 2px solid #34aadc;
-}
-
-.inputbox:focus { 
-    outline: none;
-    border-bottom: 2px solid #007aff;
-}
-
-.errorbox {
-	outline: none;
-	border: none;
-    font: 16px arial;
-    padding: 5px;
-    color: #000000;
-    margin-left: 25px;
-    border-bottom: 2px solid red;
-}
-
-a:link {text-decoration:none; color:black;}    /* unvisited link */
-a:visited {text-decoration:none;} /* visited link */
-a:hover {text-decoration:underline;}   /* mouse over link */
-a:active {text-decoration:underline;}  /* selected link */
-

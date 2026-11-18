@@ -1,5 +1,5 @@
 {
     "/apps/{{app}}/login" : "/apis/login.js?get=true",
     "/apps/{{app}}/register" : "/apis/register.js",
-    "/apps/{{app}}/test" : "/apis/test.js"
+    "/apps/{{app}}/projects": "/apis/projects.js"
 }

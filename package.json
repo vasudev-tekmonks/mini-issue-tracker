@@ -1,16 +1,19 @@
 {
-  "name": "mini-issue-tracker",
-  "version": "1.0.0",
-  "description": "Monkshu starter app. Base scaffolding plus login capabilities.",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "bcryptjs": "^3.0.3",
-    "sqlite3": "^6.0.1"
-  }
+    "name": "mini-issue-tracker",
+    "version": "1.0.0",
+    "description": "Monkshu starter app. Base scaffolding plus login capabilities.",
+    "main": "index.js",
+    "scripts": {
+        "dev": "nodemon ../monkshu/frontend/server/server.js"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "bcryptjs": "^3.0.3",
+        "sqlite3": "^6.0.1"
+    },
+    "devDependencies": {
+        "nodemon": "^3.1.14"
+    }
 }
