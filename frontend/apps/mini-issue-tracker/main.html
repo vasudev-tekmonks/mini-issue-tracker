@@ -15,6 +15,7 @@ License: See enclosed LICENSE file.
         <script type="module">
             import { main } from "./js/main.mjs";
             window.main = main;
+            main.init();
         </script>
 
         <title>Mini Issue Tracker</title>
@@ -53,7 +54,7 @@ License: See enclosed LICENSE file.
                     <div class="stat-icon">P</div>
                     <div>
                         <span class="stat-label">Projects</span>
-                        <strong class="stat-value">0</strong>
+                        <strong id="project-count" class="stat-value">0</strong>
                     </div>
                 </div>
 
@@ -90,15 +91,60 @@ License: See enclosed LICENSE file.
                             <p>Your projects will appear here.</p>
                         </div>
 
-                        <button class="primary-button">+ New Project</button>
+                        <button
+                            class="primary-button"
+                            onclick="main.openProjectForm()"
+                        >
+                            + New Project
+                        </button>
                     </div>
 
-                    <div class="empty-state">
-                        <div class="empty-icon">P</div>
-                        <h3>No projects yet</h3>
-                        <p>
-                            Create your first project to start tracking issues.
-                        </p>
+                    <form
+                        id="project-form"
+                        class="project-form"
+                        hidden
+                        onsubmit="
+                            event.preventDefault();
+                            main.createProject();
+                        "
+                    >
+                        <div class="form-fields">
+                            <input
+                                id="project-name"
+                                type="text"
+                                placeholder="Project name"
+                                maxlength="100"
+                                required
+                            />
+
+                            <textarea
+                                id="project-description"
+                                placeholder="Description (optional)"
+                                maxlength="500"
+                            ></textarea>
+                        </div>
+
+                        <div class="form-actions">
+                            <button
+                                type="button"
+                                class="secondary-button"
+                                onclick="main.closeProjectForm()"
+                            >
+                                Cancel
+                            </button>
+
+                            <button type="submit" class="primary-button">
+                                Create Project
+                            </button>
+                        </div>
+                    </form>
+
+                    <div id="projects-list" class="projects-list">
+                        <div class="empty-state">
+                            <div class="empty-icon">P</div>
+                            <h3>Loading projects...</h3>
+                            <p>Fetching your projects.</p>
+                        </div>
                     </div>
                 </div>
 

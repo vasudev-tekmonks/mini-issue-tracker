@@ -232,3 +232,80 @@ body {
         font-size: 26px;
     }
 }
+
+.project-form {
+    padding: 20px 22px;
+    background: #f9fafb;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.form-fields {
+    display: grid;
+    gap: 10px;
+}
+
+.form-fields input,
+.form-fields textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    background: #ffffff;
+    color: #1f2937;
+    font: inherit;
+}
+
+.form-fields textarea {
+    min-height: 80px;
+    resize: vertical;
+}
+
+.form-fields input:focus,
+.form-fields textarea:focus {
+    outline: none;
+    border-color: #1644cd;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.secondary-button {
+    padding: 9px 14px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    background: #ffffff;
+    color: #374151;
+    cursor: pointer;
+}
+
+.projects-list {
+    min-height: 220px;
+}
+
+.project-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 22px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.project-item:last-child {
+    border-bottom: 0;
+}
+
+.project-item h3 {
+    margin: 0 0 5px;
+    font-size: 16px;
+}
+
+.project-item p {
+    margin: 0;
+    color: #6b7280;
+    font-size: 13px;
+}

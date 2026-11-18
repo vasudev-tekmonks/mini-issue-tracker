@@ -16,6 +16,7 @@ export const APP_CONSTANTS = {
     MIN_PASS_LENGTH: 8,
     API_LOGIN: BACKEND+`/apps/${APP_NAME}/login`,
     API_REGISTER: BACKEND+`/apps/${APP_NAME}/register`,
+    API_PROJECTS: BACKEND+`/apps/${APP_NAME}/projects`,
     BCRYPT_SALT: "$2a$10$VFyiln/PpFyZc.ABoi4ppf",
     USERID: "id",
     USER_ROLE: "user",
