@@ -3,6 +3,7 @@ import { router } from "/framework/js/router.mjs";
 
 let currentProject = null;
 let issues = [];
+let editingIssueId = null;
 
 async function loadProject() {
     const decodedURL = router.decodeURL(window.location.href);
@@ -76,9 +77,18 @@ function renderIssues() {
                 <p>${escapeHTML(issue.description || "No description")}</p>
             </div>
 
-            <div class="issue-meta">
-                <span>${escapeHTML(issue.status)}</span>
-                <span>${escapeHTML(issue.priority)}</span>
+            <div class="issue-actions">
+                <div class="issue-meta">
+                    <span>${escapeHTML(issue.status)}</span>
+                    <span>${escapeHTML(issue.priority)}</span>
+                </div>
+
+                <button
+                    class="secondary-button"
+                    onclick="project.openEditIssue('${escapeHTML(issue.id)}')"
+                >
+                    Edit
+                </button>
             </div>
         </div>
     `,
@@ -98,7 +108,12 @@ function openIssueForm() {
         return;
     }
 
+    editingIssueId = null;
+
     document.getElementById("issue-form").hidden = false;
+    document.getElementById("issue-form-title").textContent = "Create Issue";
+    document.querySelector("#issue-form button[type='submit']").textContent =
+        "Create Issue";
     document.getElementById("issue-title").focus();
 }
 
@@ -116,40 +131,94 @@ async function createIssue() {
     const descriptionInput = document.getElementById("issue-description");
     const assigneeInput = document.getElementById("issue-assignee");
     const priorityInput = document.getElementById("issue-priority");
+    const statusInput = document.getElementById("issue-status");
 
     const title = titleInput.value.trim();
     const description = descriptionInput.value.trim();
     const assignee = assigneeInput.value.trim();
     const priority = priorityInput.value;
+    const status = statusInput.value;
 
     if (!title) {
         titleInput.focus();
         return;
     }
 
-    const response = await apimanager.rest(APP_CONSTANTS.API_ISSUES, "POST", {
-        op: "create",
+    const request = {
+        op: editingIssueId ? "update" : "create",
         projectId: currentProject.id,
         title,
         description,
         assignee,
         priority,
-    });
+        status,
+    };
+
+    if (editingIssueId) {
+        request.id = editingIssueId;
+    }
+
+    const response = await apimanager.rest(
+        APP_CONSTANTS.API_ISSUES,
+        "POST",
+        request,
+    );
 
     if (!response || !response.result) {
         LOG.error("Failed to create issue.");
         return;
     }
 
-    issues.push(response.issue);
+    if (editingIssueId) {
+        const index = issues.findIndex((issue) => issue.id === editingIssueId);
+
+        if (index !== -1) {
+            issues[index] = response.issue;
+        }
+    } else {
+        issues.push(response.issue);
+    }
 
     renderIssues();
     closeIssueForm();
+
+    editingIssueId = null;
 
     titleInput.value = "";
     descriptionInput.value = "";
     assigneeInput.value = "";
     priorityInput.value = "Medium";
+    statusInput.value = "Open";
+}
+
+function openEditIssue(issueId) {
+    const issue = issues.find((item) => item.id === issueId);
+
+    if (!issue) {
+        LOG.error(`Issue not found: ${issueId}`);
+        return;
+    }
+
+    editingIssueId = issueId;
+
+    document.getElementById("issue-form").hidden = false;
+    document.getElementById("issue-form-title").textContent = "Edit Issue";
+    document.querySelector("#issue-form button[type='submit']").textContent =
+        "Update Issue";
+
+    document.getElementById("issue-title").value = issue.title;
+
+    document.getElementById("issue-description").value =
+        issue.description || "";
+
+    document.getElementById("issue-assignee").value = issue.assignee || "";
+
+    document.getElementById("issue-priority").value =
+        issue.priority || "Medium";
+
+    document.getElementById("issue-status").value = issue.status || "Open";
+
+    document.getElementById("issue-title").focus();
 }
 
 function goBack() {
@@ -162,8 +231,9 @@ async function init() {
 
 export const project = {
     init,
+    goBack,
     openIssueForm,
     closeIssueForm,
     createIssue,
-    goBack,
+    openEditIssue,
 };
