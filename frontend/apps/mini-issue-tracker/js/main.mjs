@@ -4,6 +4,7 @@
  */
 
 import { apimanager } from "/framework/js/apimanager.mjs";
+import {router} from "/framework/js/router.mjs";
 import { loginmanager } from "./loginmanager.mjs";
 
 let projects = [];
@@ -105,15 +106,30 @@ function renderProjects() {
     container.innerHTML = projects
         .map(
             (project) => `
-        <div class="project-item">
-            <div>
-                <h3>${escapeHTML(project.name)}</h3>
-                <p>${escapeHTML(project.description || "No description")}</p>
-            </div>
+        <div 
+            class="project-item" 
+            onclick="main.openProject('${escapeHTML(project.id)}')">
+                <div>
+                    <h3>${escapeHTML(project.name)}</h3>
+                    <p>${escapeHTML(project.description || "No description")}</p>
+                </div>
         </div>
     `,
         )
         .join("");
+}
+
+async function openProject(projectId) {
+    const project = projects.find(item => item.id === projectId);
+
+    if (!project) {
+        LOG.error(`Project not found: ${projectId}`);
+        return;
+    }
+
+    await router.loadPage(
+        `${APP_CONSTANTS.APP_PATH}/project.html?id=${encodeURIComponent(project.id)}`
+    );
 }
 
 function updateProjectCount() {
@@ -350,4 +366,5 @@ export const main = {
     closeIssueForm,
     createIssue,
     openEditIssue,
+    openProject
 };
