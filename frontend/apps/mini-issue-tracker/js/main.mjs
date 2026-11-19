@@ -4,7 +4,7 @@
  */
 
 import { apimanager } from "/framework/js/apimanager.mjs";
-import {router} from "/framework/js/router.mjs";
+import { router } from "/framework/js/router.mjs";
 import { loginmanager } from "./loginmanager.mjs";
 
 let projects = [];
@@ -62,7 +62,7 @@ function renderIssues() {
     container.innerHTML = issues
         .map(
             (issue) => `
-                <div class="issue-item">
+                <div class="issue-item" onclick="main.openIssue('${escapeHTML(issue.id)}')">
                     <div class="issue-content">
                         <h3>${escapeHTML(issue.title)}</h3>
                         <p>${escapeHTML(issue.description || "No description")}</p>
@@ -76,7 +76,7 @@ function renderIssues() {
 
                         <button
                             class="secondary-button"
-                            onclick="main.openEditIssue('${escapeHTML(issue.id)}')"
+                            onclick="event.stopPropagation(); main.openEditIssue('${escapeHTML(issue.id)}')"                
                         >
                             Edit
                         </button>
@@ -120,7 +120,7 @@ function renderProjects() {
 }
 
 async function openProject(projectId) {
-    const project = projects.find(item => item.id === projectId);
+    const project = projects.find((item) => item.id === projectId);
 
     if (!project) {
         LOG.error(`Project not found: ${projectId}`);
@@ -128,7 +128,20 @@ async function openProject(projectId) {
     }
 
     await router.loadPage(
-        `${APP_CONSTANTS.APP_PATH}/project.html?id=${encodeURIComponent(project.id)}`
+        `${APP_CONSTANTS.APP_PATH}/project.html?id=${encodeURIComponent(project.id)}`,
+    );
+}
+
+async function openIssue(issueId) {
+    const issue = issues.find((item) => item.id === issueId);
+
+    if (!issue) {
+        LOG.error(`Issue not found: ${issueId}`);
+        return;
+    }
+
+    await router.loadPage(
+        `${APP_CONSTANTS.APP_PATH}/issue.html?id=${encodeURIComponent(issue.id)}`,
     );
 }
 
@@ -366,5 +379,6 @@ export const main = {
     closeIssueForm,
     createIssue,
     openEditIssue,
-    openProject
+    openProject,
+    openIssue
 };

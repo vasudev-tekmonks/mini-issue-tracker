@@ -2,5 +2,6 @@
     "/apps/{{app}}/login": "/apis/login.js?get=true",
     "/apps/{{app}}/register": "/apis/register.js",
     "/apps/{{app}}/projects": "/apis/projects.js",
-    "/apps/{{app}}/issues": "/apis/issues.js"
+    "/apps/{{app}}/issues": "/apis/issues.js",
+    "/apps/{{app}}/comments": "/apis/comments.js"
 }

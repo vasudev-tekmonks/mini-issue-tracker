@@ -377,3 +377,56 @@ body {
 .issue-actions .secondary-button {
     padding: 6px 12px;
 }
+
+.issue-detail {
+    padding: 20px 22px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.issue-detail-row {
+    display: flex;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #f1f3f5;
+}
+
+.issue-detail-row:last-child {
+    border-bottom: 0;
+}
+
+.issue-detail-label {
+    width: 100px;
+    font-weight: 600;
+    color: #374151;
+}
+
+.issue-detail-row > span:last-child {
+    color: #6b7280;
+}
+
+.issue-detail .secondary-button,
+.panel-header .secondary-button {
+    padding: 8px 14px;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.panel-header > div:first-child {
+    min-width: 0;
+}
+
+.panel-header h2 {
+    margin: 8px 0 4px;
+}
+
+.panel-header p {
+    margin: 0;
+    color: #6b7280;
+}

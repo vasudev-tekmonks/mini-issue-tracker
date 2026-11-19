@@ -1,0 +1,116 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="pragma" content="no-cache" />
+        <meta http-equiv="expires" content="-1" />
+
+        <link rel="stylesheet" type="text/css" href="./css/common.css" />
+        <link rel="stylesheet" type="text/css" href="./css/main.css" />
+
+        <script type="module">
+            import { issue } from "./js/issue.mjs";
+
+            window.issue = issue;
+            issue.init();
+        </script>
+
+        <title>Issue - Mini Issue Tracker</title>
+    </head>
+
+    <body>
+        <main class="main-container">
+            <div class="panel">
+                <div class="panel-header">
+                    <div>
+                        <button
+                            class="secondary-button"
+                            onclick="issue.goBack()"
+                        >
+                            ← Back
+                        </button>
+
+                        <h2 id="issue-title">Issue</h2>
+                        <p id="issue-description"></p>
+                    </div>
+
+                    <button class="primary-button" onclick="issue.openEdit()">
+                        Edit Issue
+                    </button>
+                </div>
+
+                <div class="issue-detail">
+                    <div class="issue-detail-row">
+                        <span class="issue-detail-label">Status</span>
+                        <span id="issue-status"></span>
+                    </div>
+
+                    <div class="issue-detail-row">
+                        <span class="issue-detail-label">Priority</span>
+                        <span id="issue-priority"></span>
+                    </div>
+
+                    <div class="issue-detail-row">
+                        <span class="issue-detail-label">Assignee</span>
+                        <span id="issue-assignee"></span>
+                    </div>
+                </div>
+
+                <div class="panel-header">
+                    <div>
+                        <h2>Comments</h2>
+                    </div>
+
+                    <button
+                        class="primary-button"
+                        onclick="issue.openCommentForm()"
+                    >
+                        + Add Comment
+                    </button>
+                </div>
+
+                <form
+                    id="comment-form"
+                    class="project-form"
+                    hidden
+                    onsubmit="
+                        event.preventDefault();
+                        issue.addComment();
+                    "
+                >
+                    <div class="form-fields">
+                        <h3>Add Comment</h3>
+
+                        <textarea
+                            id="comment-message"
+                            placeholder="Write a comment..."
+                            maxlength="1000"
+                            required
+                        ></textarea>
+                    </div>
+
+                    <div class="form-actions">
+                        <button
+                            type="button"
+                            class="secondary-button"
+                            onclick="issue.closeCommentForm()"
+                        >
+                            Cancel
+                        </button>
+
+                        <button type="submit" class="primary-button">
+                            Add Comment
+                        </button>
+                    </div>
+                </form>
+
+                <div id="issue-comments" class="issues-list">
+                    <div class="empty-state">
+                        <h3>Loading comments...</h3>
+                        <p>Fetching issue comments.</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </body>
+</html>

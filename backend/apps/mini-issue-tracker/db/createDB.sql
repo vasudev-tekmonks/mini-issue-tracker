@@ -18,3 +18,11 @@ CREATE TABLE issues(
     priority varchar,
     status varchar
 );
+
+CREATE TABLE comments(
+    id varchar,
+    issueId varchar,
+    userId varchar,
+    message varchar,
+    createdAt varchar
+);

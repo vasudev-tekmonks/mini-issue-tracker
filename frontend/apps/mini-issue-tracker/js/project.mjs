@@ -9,6 +9,7 @@ async function loadProject() {
     const decodedURL = router.decodeURL(window.location.href);
     const params = new URLSearchParams(decodedURL.split("?")[1]);
     const projectId = params.get("id");
+    const editIssueId = params.get("edit");
 
     if (!projectId) {
         LOG.error("Project ID is missing.");
@@ -36,6 +37,10 @@ async function loadProject() {
         currentProject.description || "No description";
 
     await loadIssues(projectId);
+
+    if (editIssueId) {
+        openEditIssue(editIssueId);
+    }
 }
 
 async function loadIssues(projectId) {
@@ -73,7 +78,12 @@ function renderIssues() {
             (issue) => `
         <div class="issue-item">
             <div class="issue-content">
-                <h3>${escapeHTML(issue.title)}</h3>
+                <h3
+                    class="issue-title-link"
+                    onclick="project.openIssue('${escapeHTML(issue.id)}')"
+                >
+                    ${escapeHTML(issue.title)}
+                </h3>
                 <p>${escapeHTML(issue.description || "No description")}</p>
             </div>
 
@@ -221,6 +231,10 @@ function openEditIssue(issueId) {
     document.getElementById("issue-title").focus();
 }
 
+function openIssue(issueId) {
+    router.loadPage(`${APP_CONSTANTS.APP_PATH}/issue.html?id=${issueId}`);
+}
+
 function goBack() {
     router.loadPage(APP_CONSTANTS.MAIN_THTML);
 }
@@ -236,4 +250,5 @@ export const project = {
     closeIssueForm,
     createIssue,
     openEditIssue,
+    openIssue,
 };
