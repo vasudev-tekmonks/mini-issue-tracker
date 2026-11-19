@@ -69,7 +69,7 @@ body {
     max-width: 1200px;
     margin: 0 auto;
     padding: 40px 32px;
-	margin-top: 35px;
+    margin-top: 35px;
 }
 
 .welcome-section {
@@ -154,12 +154,17 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 20px;
     padding: 22px;
     border-bottom: 1px solid #e5e7eb;
 }
 
+.panel-header > div:first-child {
+    min-width: 0;
+}
+
 .panel-header h2 {
-    margin: 0 0 5px;
+    margin: 8px 0 4px;
     font-size: 18px;
 }
 
@@ -183,6 +188,15 @@ body {
     background: #1644cd;
 }
 
+.secondary-button {
+    padding: 9px 14px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    background: #ffffff;
+    color: #374151;
+    cursor: pointer;
+}
+
 .empty-state {
     padding: 55px 20px;
     text-align: center;
@@ -201,36 +215,6 @@ body {
     margin: 0;
     color: #6b7280;
     font-size: 14px;
-}
-
-@media (max-width: 800px) {
-    .stats-grid,
-    .content-grid {
-        grid-template-columns: 1fr 1fr;
-    }
-
-    .nav-user {
-        display: none;
-    }
-}
-
-@media (max-width: 550px) {
-    #navbar {
-        padding: 0 16px;
-    }
-
-    .dashboard {
-        padding: 24px 16px;
-    }
-
-    .stats-grid,
-    .content-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .welcome-section h1 {
-        font-size: 26px;
-    }
 }
 
 .project-form {
@@ -281,15 +265,6 @@ body {
     justify-content: flex-end;
     gap: 10px;
     margin-top: 12px;
-}
-
-.secondary-button {
-    padding: 9px 14px;
-    border: 1px solid #d1d5db;
-    border-radius: 6px;
-    background: #ffffff;
-    color: #374151;
-    cursor: pointer;
 }
 
 .projects-list {
@@ -379,14 +354,14 @@ body {
 }
 
 .issue-detail {
-    padding: 20px 22px;
+    padding: 12px 22px;
     border-bottom: 1px solid #e5e7eb;
 }
 
 .issue-detail-row {
     display: flex;
     align-items: center;
-    padding: 10px 0;
+    padding: 9px 0;
     border-bottom: 1px solid #f1f3f5;
 }
 
@@ -395,7 +370,7 @@ body {
 }
 
 .issue-detail-label {
-    width: 100px;
+    width: 110px;
     font-weight: 600;
     color: #374151;
 }
@@ -411,22 +386,74 @@ body {
     font-weight: 500;
 }
 
-.panel-header {
+.issue-detail + .panel-header {
+    padding-top: 18px;
+    padding-bottom: 18px;
+}
+
+.comment-item {
+    padding: 16px 22px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.comment-item:last-child {
+    border-bottom: 0;
+}
+
+.comment-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 20px;
+    gap: 15px;
+    margin-bottom: 10px;
 }
 
-.panel-header > div:first-child {
-    min-width: 0;
+.comment-author {
+    font-weight: 600;
+    color: #1f2937;
 }
 
-.panel-header h2 {
-    margin: 8px 0 4px;
-}
-
-.panel-header p {
-    margin: 0;
+.comment-time {
+    font-size: 13px;
     color: #6b7280;
+}
+
+.comment-item .comment-message {
+    display: block;
+    margin: 0;
+    padding: 0;
+    color: #4b5563;
+    font-size: 14px;
+    line-height: 1.5;
+    text-indent: 0;
+}
+
+@media (max-width: 800px) {
+    .stats-grid,
+    .content-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .nav-user {
+        display: none;
+    }
+}
+
+@media (max-width: 550px) {
+    #navbar {
+        padding: 0 16px;
+    }
+
+    .dashboard {
+        padding: 24px 16px;
+    }
+
+    .stats-grid,
+    .content-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .welcome-section h1 {
+        font-size: 26px;
+    }
 }

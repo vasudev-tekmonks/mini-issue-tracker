@@ -72,13 +72,22 @@ function renderComments(comments) {
     container.innerHTML = comments
         .map(
             (comment) => `
-        <div class="issue-item">
-            <div class="issue-content">
-                <h3>${escapeHTML(comment.userName || "Unknown user")}</h3>
-                <p>${escapeHTML(comment.message)}</p>
-            </div>
-        </div>
-    `,
+                <div class="comment-item">
+                    <div class="comment-header">
+                        <span class="comment-author">
+                            ${escapeHTML(comment.userName || "Unknown user")}
+                        </span>
+
+                        <span class="comment-time">
+                            ${escapeHTML(new Date(comment.createdAt).toLocaleString())}
+                        </span>
+                    </div>
+
+                    <p class="comment-message">
+                        ${escapeHTML(comment.message)}
+                    </p>
+                </div>
+            `,
         )
         .join("");
 }
