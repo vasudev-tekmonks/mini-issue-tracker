@@ -222,6 +222,9 @@ function openIssueForm() {
 
     document.getElementById("issue-form").hidden = false;
 
+    document.getElementById("issue-status").value = "Open";
+    document.getElementById("issue-status").disabled = true;
+
     document.getElementById("issue-form-title").textContent = "Create Issue";
     document.getElementById("issue-submit-button").textContent = "Create Issue";
 
@@ -258,6 +261,9 @@ function openEditIssue(issueId) {
     document.getElementById("issue-assignee").value = issue.assignee || "";
     document.getElementById("issue-priority").value =
         issue.priority || "Medium";
+
+    document.getElementById("issue-status").value = issue.status || "Open";
+    document.getElementById("issue-status").disabled = false;
 
     document.getElementById("issue-title").focus();
 
@@ -298,6 +304,7 @@ async function createIssue() {
     const assignee = assigneeInput.value.trim();
     const priority = priorityInput.value;
     const status = editingIssueId ? statusInput.value : "Open";
+    
 
     if (!projectId || !title) {
         return;
@@ -380,5 +387,5 @@ export const main = {
     createIssue,
     openEditIssue,
     openProject,
-    openIssue
+    openIssue,
 };
