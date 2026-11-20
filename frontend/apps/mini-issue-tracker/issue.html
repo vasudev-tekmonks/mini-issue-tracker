@@ -56,6 +56,67 @@
                     </div>
                 </div>
 
+                <form
+                    id="issue-edit-form"
+                    class="project-form"
+                    hidden
+                    onsubmit="
+                        event.preventDefault();
+                        issue.updateIssue();
+                    "
+                >
+                    <div class="form-fields">
+                        <h3>Edit Issue</h3>
+
+                        <input
+                            id="edit-issue-title"
+                            type="text"
+                            placeholder="Issue title"
+                            maxlength="150"
+                            required
+                        />
+
+                        <textarea
+                            id="edit-issue-description"
+                            placeholder="Description (optional)"
+                            maxlength="1000"
+                        ></textarea>
+
+                        <input
+                            id="edit-issue-assignee"
+                            type="text"
+                            placeholder="Assignee (optional)"
+                        />
+
+                        <select id="edit-issue-priority">
+                            <option value="Low">Low</option>
+                            <option value="Medium">Medium</option>
+                            <option value="High">High</option>
+                            <option value="Critical">Critical</option>
+                        </select>
+
+                        <select id="edit-issue-status">
+                            <option value="Open">Open</option>
+                            <option value="In Progress">In Progress</option>
+                            <option value="Closed">Closed</option>
+                        </select>
+                    </div>
+
+                    <div class="form-actions">
+                        <button
+                            type="button"
+                            class="secondary-button"
+                            onclick="issue.closeEdit()"
+                        >
+                            Cancel
+                        </button>
+
+                        <button type="submit" class="primary-button">
+                            Update Issue
+                        </button>
+                    </div>
+                </form>
+
                 <div class="panel-header">
                     <div>
                         <h2>Comments</h2>
