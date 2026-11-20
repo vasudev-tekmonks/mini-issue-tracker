@@ -1,23 +1,34 @@
 /**
  * The new user registration API.
- * 
+ *
  * License: See enclosed LICENSE file.
  * (C) 2015 TekMonks. All rights reserved.
  */
 
 const userid = require(`${__dirname}/lib/userid.js`);
 
-exports.doService = async jsonReq => {
-	if (!validateRequest(jsonReq)) {LOG.error("Validation failure."); return CONSTANTS.FALSE_RESULT;}
-	
-	LOG.debug("Got register request for user: " + jsonReq.name);
+exports.doService = async (jsonReq) => {
+    if (!validateRequest(jsonReq)) {
+        LOG.error("Validation failure.");
+        return CONSTANTS.FALSE_RESULT;
+    }
 
-	let result = await userid.register(jsonReq.id, jsonReq.name);
+    LOG.debug("Got register request for user: " + jsonReq.name);
 
-	if (result) LOG.info(`New user registered: ${jsonReq.name}`); 
-	else LOG.error(`User registration error for: ${jsonReq.name}`);
+    let result = await userid.register(jsonReq.id, jsonReq.name);
 
-	return {result};
-}
+    if (result) {
+        LOG.info(`New user registered: ${jsonReq.name}`);
 
-const validateRequest = jsonReq => (jsonReq && jsonReq.id && jsonReq.name);
+        return {
+            result: true,
+            id: jsonReq.id,
+            name: jsonReq.name,
+        };
+    }
+
+    LOG.error(`User registration error for: ${jsonReq.name}`);
+    return CONSTANTS.FALSE_RESULT;
+};
+
+const validateRequest = (jsonReq) => jsonReq && jsonReq.id && jsonReq.name;

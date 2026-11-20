@@ -16,9 +16,14 @@ async function loadProject() {
         return;
     }
 
-    const response = await apimanager.rest(APP_CONSTANTS.API_PROJECTS, "POST", {
-        op: "list",
-    });
+    const response = await apimanager.rest(
+        APP_CONSTANTS.API_PROJECTS,
+        "POST",
+        {
+            op: "list",
+        },
+        true,
+    );
 
     if (!response || !response.result) {
         LOG.error("Failed to load projects.");
@@ -44,10 +49,15 @@ async function loadProject() {
 }
 
 async function loadIssues(projectId) {
-    const response = await apimanager.rest(APP_CONSTANTS.API_ISSUES, "POST", {
-        op: "list",
-        projectId,
-    });
+    const response = await apimanager.rest(
+        APP_CONSTANTS.API_ISSUES,
+        "POST",
+        {
+            op: "list",
+            projectId,
+        },
+        true,
+    );
 
     if (!response || !response.result) {
         LOG.error("Failed to load project issues.");
@@ -162,6 +172,7 @@ async function createIssue() {
         assignee,
         priority,
         status,
+
     };
 
     if (editingIssueId) {
@@ -172,6 +183,7 @@ async function createIssue() {
         APP_CONSTANTS.API_ISSUES,
         "POST",
         request,
+        true,
     );
 
     if (!response || !response.result) {

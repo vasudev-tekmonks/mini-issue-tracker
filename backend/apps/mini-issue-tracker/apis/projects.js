@@ -1,9 +1,23 @@
 const sqlite3 = require("sqlite3");
 const API_CONSTANTS = require(`${__dirname}/lib/constants.js`);
+const jwtTokenManager = require(
+    `${CONSTANTS.LIBDIR}/apiregistry_extensions/jwttokenmanager.js`,
+);
 
 let projectsDB;
 
-exports.doService = async (jsonReq) => {
+exports.doService = async (jsonReq, servObject, headers) => {
+    const authHeader = headers?.authorization || "";
+    const token = authHeader.startsWith("Bearer ")
+        ? authHeader.substring(7)
+        : null;
+
+    const claims = token ? jwtTokenManager.getClaims(token) : {};
+
+    LOG.info(`Authenticated user: ${claims.sub}`);
+
+    const ownerId = claims.sub;
+
     if (!jsonReq || !jsonReq.op) {
         LOG.error("Invalid project request.");
         return CONSTANTS.FALSE_RESULT;
@@ -12,18 +26,18 @@ exports.doService = async (jsonReq) => {
     await initDB();
 
     if (jsonReq.op === "create") {
-        return createProject(jsonReq);
+        return createProject(jsonReq, ownerId);
     }
 
     if (jsonReq.op === "list") {
-        return listProjects();
+        return listProjects(ownerId);
     }
 
     LOG.error(`Unknown project operation: ${jsonReq.op}`);
     return CONSTANTS.FALSE_RESULT;
 };
 
-function createProject(jsonReq) {
+function createProject(jsonReq, ownerId) {
     if (!jsonReq.name) {
         LOG.error("Project name is required.");
         return CONSTANTS.FALSE_RESULT;
@@ -33,8 +47,8 @@ function createProject(jsonReq) {
 
     return new Promise((resolve) => {
         projectsDB.run(
-            `INSERT INTO projects(id, name, description) VALUES (?, ?, ?)`,
-            [id, jsonReq.name, jsonReq.description || ""],
+            `INSERT INTO projects(id, name, description, ownerId) VALUES (?, ?, ?, ?)`,
+            [id, jsonReq.name, jsonReq.description || "", ownerId],
             (err) => {
                 if (err) {
                     LOG.error(`Project creation failed: ${err}`);
@@ -55,10 +69,11 @@ function createProject(jsonReq) {
     });
 }
 
-function listProjects() {
+function listProjects(ownerId) {
     return new Promise((resolve) => {
         projectsDB.all(
-            `SELECT id, name, description FROM projects`,
+            `SELECT id, name, description FROM projects WHERE ownerId = ?`,
+            [ownerId],
             (err, rows) => {
                 if (err) {
                     LOG.error(`Project listing failed: ${err}`);

@@ -16,10 +16,18 @@ exports.doService = async (jsonReq) => {
 
     let result = await userid.login(jsonReq.id);
 
-    if (result.result) LOG.info(`User logged in: ${result.name}`);
-    else LOG.error(`Bad login for id: ${jsonReq.id}`);
+    if (!result.result) {
+        LOG.error(`Bad login for id: ${jsonReq.id}`);
+        return CONSTANTS.FALSE_RESULT;
+    }
 
-    return { result: result.result };
+    LOG.info(`User logged in: ${result.name}`);
+
+    return {
+        result: true,
+        id: jsonReq.id,
+        name: result.name,
+    };
 };
 
 const validateRequest = (jsonReq) => jsonReq && jsonReq.id;

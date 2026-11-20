@@ -1,9 +1,24 @@
 const sqlite3 = require("sqlite3");
 const API_CONSTANTS = require(`${__dirname}/lib/constants.js`);
+const jwtTokenManager = require(
+    `${CONSTANTS.LIBDIR}/apiregistry_extensions/jwttokenmanager.js`,
+);
 
 let issuesDB;
 
-exports.doService = async (jsonReq) => {
+exports.doService = async (jsonReq, servObject, headers) => {
+    const authHeader = headers?.authorization || "";
+
+    const token = authHeader.startsWith("Bearer ")
+        ? authHeader.substring(7)
+        : null;
+
+    const claims = token ? jwtTokenManager.getClaims(token) : {};
+
+    const ownerId = claims.sub;
+
+    LOG.info(`Authenticated user: ${ownerId}`);
+
     if (!jsonReq || !jsonReq.op) {
         LOG.error("Invalid issue request.");
         return CONSTANTS.FALSE_RESULT;
@@ -12,26 +27,26 @@ exports.doService = async (jsonReq) => {
     await initDB();
 
     if (jsonReq.op === "create") {
-        return createIssue(jsonReq);
+        return createIssue(jsonReq, ownerId);
     }
 
     if (jsonReq.op === "list") {
-        return listIssues(jsonReq);
+        return listIssues(jsonReq, ownerId);
     }
 
     if (jsonReq.op === "get") {
-        return getIssue(jsonReq);
+        return getIssue(jsonReq, ownerId);
     }
 
     if (jsonReq.op === "update") {
-        return updateIssue(jsonReq);
+        return updateIssue(jsonReq, ownerId);
     }
 
     LOG.error(`Unknown issue operation: ${jsonReq.op}`);
     return CONSTANTS.FALSE_RESULT;
 };
 
-function createIssue(jsonReq) {
+async function createIssue(jsonReq, ownerId) {
     if (!jsonReq.projectId || !jsonReq.title) {
         LOG.error("Project ID and issue title are required.");
         return CONSTANTS.FALSE_RESULT;
@@ -43,6 +58,19 @@ function createIssue(jsonReq) {
     const assignee = jsonReq.assignee || "";
     const priority = jsonReq.priority || "Medium";
     const status = "Open";
+
+    const project = await new Promise((resolve) => {
+        issuesDB.get(
+            `SELECT id FROM projects WHERE id = ? AND ownerId = ?`,
+            [jsonReq.projectId, ownerId],
+            (err, row) => resolve(err ? null : row),
+        );
+    });
+
+    if (!project) {
+        LOG.error(`Unauthorized project access: ${jsonReq.projectId}`);
+        return CONSTANTS.FALSE_RESULT;
+    }
 
     return new Promise((resolve) => {
         issuesDB.run(
@@ -83,17 +111,21 @@ function createIssue(jsonReq) {
     });
 }
 
-function listIssues(jsonReq) {
+function listIssues(jsonReq, ownerId) {
     return new Promise((resolve) => {
         let query = `
-            SELECT id, projectId, title, description, assignee, priority, status
+            SELECT issues.id, issues.projectId, issues.title,
+                issues.description, issues.assignee,
+                issues.priority, issues.status
             FROM issues
+            JOIN projects ON issues.projectId = projects.id
+            WHERE projects.ownerId = ?
         `;
 
-        const params = [];
+        const params = [ownerId];
 
         if (jsonReq && jsonReq.projectId) {
-            query += ` WHERE projectId = ?`;
+            query += ` AND issues.projectId = ?`;
             params.push(jsonReq.projectId);
         }
 
@@ -111,7 +143,7 @@ function listIssues(jsonReq) {
     });
 }
 
-function getIssue(jsonReq) {
+function getIssue(jsonReq, ownerId) {
     if (!jsonReq.id) {
         LOG.error("Issue ID is required.");
         return CONSTANTS.FALSE_RESULT;
@@ -119,10 +151,13 @@ function getIssue(jsonReq) {
 
     return new Promise((resolve) => {
         issuesDB.get(
-            `SELECT id, projectId, title, description, assignee, priority, status
-             FROM issues
-             WHERE id = ?`,
-            [jsonReq.id],
+            `SELECT issues.id, issues.projectId, issues.title,
+                issues.description, issues.assignee,
+                issues.priority, issues.status
+            FROM issues
+            JOIN projects ON issues.projectId = projects.id
+            WHERE issues.id = ? AND projects.ownerId = ?`,
+            [jsonReq.id, ownerId],
             (err, row) => {
                 if (err) {
                     LOG.error(`Issue lookup failed: ${err}`);
@@ -141,7 +176,7 @@ function getIssue(jsonReq) {
     });
 }
 
-function updateIssue(jsonReq) {
+function updateIssue(jsonReq, ownerId) {
     if (!jsonReq.id) {
         LOG.error("Issue ID is required.");
         return CONSTANTS.FALSE_RESULT;
@@ -160,12 +195,15 @@ function updateIssue(jsonReq) {
     return new Promise((resolve) => {
         issuesDB.run(
             `UPDATE issues
-             SET title = ?,
-                 description = ?,
-                 assignee = ?,
-                 priority = ?,
-                 status = ?
-             WHERE id = ?`,
+            SET title = ?,
+                description = ?,
+                assignee = ?,
+                priority = ?,
+                status = ?
+            WHERE id = ?
+            AND projectId IN (
+                SELECT id FROM projects WHERE ownerId = ?
+            )`,
             [
                 jsonReq.title,
                 description,
@@ -173,6 +211,7 @@ function updateIssue(jsonReq) {
                 priority,
                 status,
                 jsonReq.id,
+                ownerId,
             ],
             function (err) {
                 if (err) {

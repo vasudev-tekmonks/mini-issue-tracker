@@ -14,10 +14,15 @@ async function loadIssue() {
         return;
     }
 
-    const response = await apimanager.rest(APP_CONSTANTS.API_ISSUES, "POST", {
-        op: "get",
-        id: issueId,
-    });
+    const response = await apimanager.rest(
+        APP_CONSTANTS.API_ISSUES,
+        "POST",
+        {
+            op: "get",
+            id: issueId,
+        },
+        true,
+    );
 
     if (!response || !response.result) {
         LOG.error("Failed to load issue.");

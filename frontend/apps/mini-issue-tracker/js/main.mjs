@@ -12,9 +12,12 @@ let issues = [];
 let editingIssueId = null;
 
 async function loadProjects() {
-    const response = await apimanager.rest(APP_CONSTANTS.API_PROJECTS, "POST", {
-        op: "list",
-    });
+    const response = await apimanager.rest(
+        APP_CONSTANTS.API_PROJECTS,
+        "POST",
+        { op: "list" },
+        true,
+    );
 
     if (!response || !response.result) {
         LOG.error("Failed to load projects.");
@@ -28,9 +31,14 @@ async function loadProjects() {
 }
 
 async function loadIssues() {
-    const response = await apimanager.rest(APP_CONSTANTS.API_ISSUES, "POST", {
-        op: "list",
-    });
+    const response = await apimanager.rest(
+        APP_CONSTANTS.API_ISSUES,
+        "POST",
+        {
+            op: "list",
+        },
+        true,
+    );
 
     if (!response || !response.result) {
         LOG.error("Failed to load issues.");
@@ -184,11 +192,16 @@ async function createProject() {
         return;
     }
 
-    const response = await apimanager.rest(APP_CONSTANTS.API_PROJECTS, "POST", {
-        op: "create",
-        name,
-        description,
-    });
+    const response = await apimanager.rest(
+        APP_CONSTANTS.API_PROJECTS,
+        "POST",
+        {
+            op: "create",
+            name,
+            description,
+        },
+        true,
+    );
 
     if (!response || !response.result) {
         LOG.error("Failed to create project.");
@@ -304,7 +317,6 @@ async function createIssue() {
     const assignee = assigneeInput.value.trim();
     const priority = priorityInput.value;
     const status = editingIssueId ? statusInput.value : "Open";
-    
 
     if (!projectId || !title) {
         return;
@@ -328,6 +340,7 @@ async function createIssue() {
         APP_CONSTANTS.API_ISSUES,
         "POST",
         request,
+        true,
     );
 
     if (!response || !response.result) {

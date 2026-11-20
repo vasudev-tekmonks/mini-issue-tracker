@@ -1,7 +1,7 @@
 {
-    "/apps/{{app}}/login": "/apis/login.js?get=true",
-    "/apps/{{app}}/register": "/apis/register.js",
-    "/apps/{{app}}/projects": "/apis/projects.js",
-    "/apps/{{app}}/issues": "/apis/issues.js",
+    "/apps/{{app}}/login": "/apis/login.js?get=true&addsToken=sub:{{{id}}},name:{{{name}}}",
+    "/apps/{{app}}/register": "/apis/register.js?addsToken=sub:{{{id}}},name:{{{name}}}",
+    "/apps/{{app}}/projects": "/apis/projects.js?needsToken=true",
+    "/apps/{{app}}/issues": "/apis/issues.js?needsToken=true",
     "/apps/{{app}}/comments": "/apis/comments.js"
 }
