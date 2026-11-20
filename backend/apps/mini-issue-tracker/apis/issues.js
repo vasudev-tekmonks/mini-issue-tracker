@@ -16,6 +16,7 @@ exports.doService = async (jsonReq, servObject, headers) => {
     const claims = token ? jwtTokenManager.getClaims(token) : {};
 
     const ownerId = claims.sub;
+    const username = claims.name;
 
     LOG.info(`Authenticated user: ${ownerId}`);
 
@@ -31,15 +32,15 @@ exports.doService = async (jsonReq, servObject, headers) => {
     }
 
     if (jsonReq.op === "list") {
-        return listIssues(jsonReq, ownerId);
+        return listIssues(jsonReq, ownerId, username);
     }
 
     if (jsonReq.op === "get") {
-        return getIssue(jsonReq, ownerId);
+        return getIssue(jsonReq, ownerId, username);
     }
 
     if (jsonReq.op === "update") {
-        return updateIssue(jsonReq, ownerId);
+        return updateIssue(jsonReq, ownerId, username);
     }
 
     LOG.error(`Unknown issue operation: ${jsonReq.op}`);
@@ -111,7 +112,7 @@ async function createIssue(jsonReq, ownerId) {
     });
 }
 
-function listIssues(jsonReq, ownerId) {
+function listIssues(jsonReq, ownerId, username) {
     return new Promise((resolve) => {
         let query = `
             SELECT issues.id, issues.projectId, issues.title,
@@ -119,10 +120,10 @@ function listIssues(jsonReq, ownerId) {
                 issues.priority, issues.status
             FROM issues
             JOIN projects ON issues.projectId = projects.id
-            WHERE projects.ownerId = ?
+            WHERE projects.ownerId = ? OR issues.assignee = ?
         `;
 
-        const params = [ownerId];
+        const params = [ownerId, username];
 
         if (jsonReq && jsonReq.projectId) {
             query += ` AND issues.projectId = ?`;
@@ -143,7 +144,7 @@ function listIssues(jsonReq, ownerId) {
     });
 }
 
-function getIssue(jsonReq, ownerId) {
+function getIssue(jsonReq, ownerId, username) {
     if (!jsonReq.id) {
         LOG.error("Issue ID is required.");
         return CONSTANTS.FALSE_RESULT;
@@ -156,8 +157,11 @@ function getIssue(jsonReq, ownerId) {
                 issues.priority, issues.status
             FROM issues
             JOIN projects ON issues.projectId = projects.id
-            WHERE issues.id = ? AND projects.ownerId = ?`,
-            [jsonReq.id, ownerId],
+            WHERE issues.id = ? AND (
+                projects.ownerId = ?
+                OR issues.assignee = ?
+            )`,
+            [jsonReq.id, ownerId, username],
             (err, row) => {
                 if (err) {
                     LOG.error(`Issue lookup failed: ${err}`);
@@ -176,7 +180,7 @@ function getIssue(jsonReq, ownerId) {
     });
 }
 
-function updateIssue(jsonReq, ownerId) {
+function updateIssue(jsonReq, ownerId, username) {
     if (!jsonReq.id) {
         LOG.error("Issue ID is required.");
         return CONSTANTS.FALSE_RESULT;
@@ -201,8 +205,11 @@ function updateIssue(jsonReq, ownerId) {
                 priority = ?,
                 status = ?
             WHERE id = ?
-            AND projectId IN (
-                SELECT id FROM projects WHERE ownerId = ?
+            AND (
+                projectId IN (
+                    SELECT id FROM projects WHERE ownerId = ?
+                )
+                OR assignee = ?
             )`,
             [
                 jsonReq.title,
@@ -212,6 +219,7 @@ function updateIssue(jsonReq, ownerId) {
                 status,
                 jsonReq.id,
                 ownerId,
+                username,
             ],
             function (err) {
                 if (err) {
